@@ -11,7 +11,7 @@ public class DIMACS {
 
         // Load file path and get contents of file into String
         Path filePath = Paths.get("./files", file);
-        String content = "";
+        String content;
         try {
             content = Files.readString(filePath);
         } catch (IOException e) {
@@ -30,7 +30,7 @@ public class DIMACS {
             }
 
             // Otherwise, split up line by spaces
-            String parts[] = line.split(" ");
+            String[] parts = line.split(" ");
             ArrayList<Integer> clause = new ArrayList<>();
 
             // Parse into integers
@@ -50,10 +50,4 @@ public class DIMACS {
         return clauses;
 
     }
-
-
-    public static void main(String[] args) {
-        System.out.println(DIMACS.load("testsat.txt"));
-    }
-
 }
