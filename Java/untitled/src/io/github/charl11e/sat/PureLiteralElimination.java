@@ -1,14 +1,15 @@
 package io.github.charl11e.sat;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PureLiteralElimination {
 
     public static SATResult eliminate (ArrayList<ArrayList<Integer>> clause_set) {
-        ArrayList<Integer> pure_literals = new ArrayList<>();
-        ArrayList<Integer> not_pure_literals = new ArrayList<>();
+        Set<Integer> pure_literals = new HashSet<>();
+        Set<Integer> not_pure_literals = new HashSet<>();
 
         for (ArrayList<Integer> clause : clause_set ) {
-
             for (Integer literal : clause) {
 
                 // Check if literal is already detected to not be a pure literal
@@ -17,16 +18,14 @@ public class PureLiteralElimination {
                 }
 
                 // Check if negation of literal is in pure literals
-                int index = pure_literals.indexOf(-literal);
-                if (index != -1) {
-                    pure_literals.remove(index);
+                if (pure_literals.contains(-literal)) {
+                    pure_literals.remove(-literal);
                     not_pure_literals.add(-literal);
                     not_pure_literals.add(literal);
                     continue;
                 }
 
-                // Otherwise, add to list of pure literals
-                if (!pure_literals.contains(literal)) {
+                else {
                     pure_literals.add(literal);
                 }
             }
@@ -37,12 +36,17 @@ public class PureLiteralElimination {
 
         // Remove all clauses containing pure literal
         ArrayList<ArrayList<Integer>> new_clause_set = new ArrayList<>();
-        for (Integer literal : pure_literals) {
-            for (ArrayList<Integer> clause : clause_set) {
+        for (ArrayList<Integer> clause : clause_set) {
+            boolean add_clause = true;
+            for (Integer literal : pure_literals) {
                 if (clause.contains(literal)) {
+                    add_clause = false;
                     break;
                 }
-                new_clause_set.add(clause);
+            }
+
+            if (add_clause) {
+                new_clause_set.add(new ArrayList<>(clause));
             }
         }
 
