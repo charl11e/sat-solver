@@ -32,7 +32,7 @@ public class PureLiteralElimination {
         }
 
         // Add all pure literals to the assignment
-        HashSet<Integer> assignment = new HashSet<>(pure_literals);
+        Set<Integer> assignment = new HashSet<>(pure_literals);
 
         // Remove all clauses containing pure literal
         ArrayList<ArrayList<Integer>> new_clause_set = new ArrayList<>();
@@ -57,7 +57,7 @@ public class PureLiteralElimination {
 
     public static void main(String[] args) {
         ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("testsat.txt");
-        SATResult result = UnitPropagate.propagate(clause_set);
+        SATResult result = PureLiteralElimination.eliminate(clause_set);
         System.out.println(result.getAssignment());
         System.out.println(result.getClauseSet());
     }

@@ -7,7 +7,7 @@ public class UnitPropagate {
 
     public static SATResult propagate (ArrayList<ArrayList<Integer>> clause_set) {
 
-        HashSet<Integer> assignment = new HashSet<>();
+        Set<Integer> assignment = new HashSet<>();
         boolean changed;
 
         // Find all unit clauses
