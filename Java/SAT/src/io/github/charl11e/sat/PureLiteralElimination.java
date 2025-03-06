@@ -22,7 +22,6 @@ public class PureLiteralElimination {
                     pure_literals.remove(-literal);
                     not_pure_literals.add(-literal);
                     not_pure_literals.add(literal);
-                    continue;
                 }
 
                 else {
