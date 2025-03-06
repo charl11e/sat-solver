@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class UnitPropagate {
 
-    public static PropagationResult propagate (ArrayList<ArrayList<Integer>> clause_set) {
+    public static SATResult propagate (ArrayList<ArrayList<Integer>> clause_set) {
 
         ArrayList<Integer> assignment = new ArrayList<>();
         boolean changed;
@@ -21,7 +21,7 @@ public class UnitPropagate {
                 if (clause.isEmpty()) {
                     ArrayList<ArrayList<Integer>> unsat = new ArrayList<>();
                     unsat.add(new ArrayList<>());
-                    return new PropagationResult(unsat, assignment);
+                    return new SATResult(unsat, assignment);
                 }
 
                 if (clause.size() == 1) {
@@ -31,7 +31,7 @@ public class UnitPropagate {
                     if (assignment.contains(-unitLiteral)) {
                         ArrayList<ArrayList<Integer>> unsat = new ArrayList<>();
                         unsat.add(new ArrayList<>());
-                        return new PropagationResult(unsat, assignment);
+                        return new SATResult(unsat, assignment);
                     }
 
                     if (!assignment.contains(unitLiteral)) {
@@ -55,7 +55,7 @@ public class UnitPropagate {
             }
 
             if (set1.equals(set2)) {
-                return new PropagationResult(new_clause_set, assignment);
+                return new SATResult(new_clause_set, assignment);
             }
 
             // If there are unit clauses, remove all clauses containing the unit literal, and remove -literal from all other clauses
@@ -87,17 +87,10 @@ public class UnitPropagate {
             clause_set = processed_clauses;
 
             if (!changed) {
-                return new PropagationResult(clause_set, assignment);
+                return new SATResult(clause_set, assignment);
             }
 
         }
 
-    }
-
-    public static void main(String[] args) {
-        ArrayList<ArrayList<Integer>> clauses = DIMACS.load("testsat.txt");
-        PropagationResult result = UnitPropagate.propagate(clauses);
-        System.out.println(result.getAssignment());
-        System.out.println(result.getClauseSet());
     }
 }
