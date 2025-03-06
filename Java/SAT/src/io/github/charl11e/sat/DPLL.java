@@ -16,9 +16,20 @@ public class DPLL {
 
         // If clause set contains empty clause, current branch/clause set is unsatisfiable
         if (clause_set.contains(new ArrayList<Integer>())) {
-
+            return new SATResult(new ArrayList<>(), new HashSet<>());
         }
+
+        // Apply Unit Propagation/Pure Literal Elimination
+        SATResult result = callUnitPropagate(clause_set, assignment);
+        clause_set = result.getClauseSet();
+        assignment = result.getAssignment();
+
+        result = callPureLiteralElimination(clause_set, assignment);
+        clause_set = result.getClauseSet();
+        assignment = result.getAssignment();
+
     }
+
 
     // Methods for calling Unit Propagation & Pure Literal elimination and merging the new assignments with current assignment
     private static SATResult callUnitPropagate (ArrayList<ArrayList<Integer>> clause_set, Set<Integer> assignment) {
