@@ -57,7 +57,7 @@ public class PureLiteralElimination {
 
     public static void main(String[] args) {
         ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("testsat.txt");
-        SATResult result = PureLiteralElimination.eliminate(clause_set);
+        SATResult result = UnitPropagate.propagate(clause_set);
         System.out.println(result.getAssignment());
         System.out.println(result.getClauseSet());
     }

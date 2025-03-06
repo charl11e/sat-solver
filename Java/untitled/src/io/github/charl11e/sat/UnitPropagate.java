@@ -7,7 +7,7 @@ public class UnitPropagate {
 
     public static SATResult propagate (ArrayList<ArrayList<Integer>> clause_set) {
 
-        ArrayList<Integer> assignment = new ArrayList<>();
+        Set<Integer> assignment = new HashSet<>();
         boolean changed;
 
         // Find all unit clauses
@@ -21,7 +21,7 @@ public class UnitPropagate {
                 if (clause.isEmpty()) {
                     ArrayList<ArrayList<Integer>> unsat = new ArrayList<>();
                     unsat.add(new ArrayList<>());
-                    return new SATResult(unsat, assignment);
+                    return new SATResult(unsat, new ArrayList<>(assignment));
                 }
 
                 if (clause.size() == 1) {
@@ -31,7 +31,7 @@ public class UnitPropagate {
                     if (assignment.contains(-unitLiteral)) {
                         ArrayList<ArrayList<Integer>> unsat = new ArrayList<>();
                         unsat.add(new ArrayList<>());
-                        return new SATResult(unsat, assignment);
+                        return new SATResult(unsat, new ArrayList<>(assignment));
                     }
 
                     if (!assignment.contains(unitLiteral)) {
@@ -40,22 +40,8 @@ public class UnitPropagate {
                     }
 
                 } else {
-                    new_clause_set.add(new ArrayList<>(clause));
+                    new_clause_set.add(clause);
                 }
-            }
-
-            // If there are no unit clauses, return the clause set
-            Set<Set<Integer>> set1 = new HashSet<>();
-            Set<Set<Integer>> set2 = new HashSet<>();
-            for (ArrayList<Integer> clause : clause_set) {
-                set1.add(new HashSet<> (clause));
-            }
-            for (ArrayList<Integer> clause : new_clause_set) {
-                set2.add(new HashSet<> (clause));
-            }
-
-            if (set1.equals(set2)) {
-                return new SATResult(new_clause_set, assignment);
             }
 
             // If there are unit clauses, remove all clauses containing the unit literal, and remove -literal from all other clauses
@@ -84,13 +70,12 @@ public class UnitPropagate {
                 }
             }
 
-            clause_set = processed_clauses;
-
             if (!changed) {
-                return new SATResult(clause_set, assignment);
+                return new SATResult(processed_clauses, new ArrayList<>(assignment));
             }
 
-        }
+            clause_set = processed_clauses;
 
+        }
     }
 }
