@@ -7,7 +7,7 @@ public class UnitPropagate {
 
     public static SATResult propagate (ArrayList<ArrayList<Integer>> clause_set) {
 
-        Set<Integer> assignment = new HashSet<>();
+        HashSet<Integer> assignment = new HashSet<>();
         boolean changed;
 
         // Find all unit clauses
@@ -21,7 +21,7 @@ public class UnitPropagate {
                 if (clause.isEmpty()) {
                     ArrayList<ArrayList<Integer>> unsat = new ArrayList<>();
                     unsat.add(new ArrayList<>());
-                    return new SATResult(unsat, new ArrayList<>(assignment));
+                    return new SATResult(unsat, assignment);
                 }
 
                 if (clause.size() == 1) {
@@ -31,7 +31,7 @@ public class UnitPropagate {
                     if (assignment.contains(-unitLiteral)) {
                         ArrayList<ArrayList<Integer>> unsat = new ArrayList<>();
                         unsat.add(new ArrayList<>());
-                        return new SATResult(unsat, new ArrayList<>(assignment));
+                        return new SATResult(unsat, new HashSet<>(assignment));
                     }
 
                     if (!assignment.contains(unitLiteral)) {
@@ -70,8 +70,8 @@ public class UnitPropagate {
                 }
             }
 
-            if (!changed) {
-                return new SATResult(processed_clauses, new ArrayList<>(assignment));
+            if (!changed || clause_set.equals(processed_clauses)) {
+                return new SATResult(processed_clauses, assignment);
             }
 
             clause_set = processed_clauses;

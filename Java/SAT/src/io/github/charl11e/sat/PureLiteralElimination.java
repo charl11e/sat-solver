@@ -22,6 +22,7 @@ public class PureLiteralElimination {
                     pure_literals.remove(-literal);
                     not_pure_literals.add(-literal);
                     not_pure_literals.add(literal);
+                    continue;
                 }
 
                 else {
@@ -31,7 +32,7 @@ public class PureLiteralElimination {
         }
 
         // Add all pure literals to the assignment
-        ArrayList<Integer> assignment = new ArrayList<>(pure_literals);
+        HashSet<Integer> assignment = new HashSet<>(pure_literals);
 
         // Remove all clauses containing pure literal
         ArrayList<ArrayList<Integer>> new_clause_set = new ArrayList<>();
