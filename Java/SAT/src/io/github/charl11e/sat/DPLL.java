@@ -111,7 +111,7 @@ public class DPLL {
     }
 
     public static void main(String[] args) {
-        ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("LNP-6.txt");
+        ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("8queens.txt");
         SATResult result = DPLL.solve(clause_set);
         System.out.println(result.getClauseSet());
         System.out.println(result.getAssignment());
