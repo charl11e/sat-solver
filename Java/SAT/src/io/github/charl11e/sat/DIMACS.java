@@ -20,7 +20,7 @@ public class DIMACS {
         }
 
         // Split String by lines
-        String[] lines = content.split("\n");
+        String[] lines = content.split("\\R");
 
         // Parse individual clauses from file into clauses
         for (String line : lines) {
@@ -30,7 +30,7 @@ public class DIMACS {
             }
 
             // Otherwise, split up line by spaces
-            String[] parts = line.split(" ");
+            String[] parts = line.split("\\s+");
             ArrayList<Integer> clause = new ArrayList<>();
 
             // Parse into integers

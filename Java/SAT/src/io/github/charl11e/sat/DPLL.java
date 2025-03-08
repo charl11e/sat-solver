@@ -5,7 +5,12 @@ import java.util.Set;
 
 public class DPLL {
 
-    private static final SATResult UNSAT_RESULT = new SATResult (new ArrayList<>(), new HashSet<>());
+    public static final SATResult UNSAT_RESULT;
+    static {
+        ArrayList<ArrayList<Integer>> unsat_clause_set = new ArrayList<>();
+        unsat_clause_set.add(new ArrayList<>());
+        UNSAT_RESULT = new SATResult(unsat_clause_set, new HashSet<>());
+    }
 
     // Entry point
     public static SATResult solve (ArrayList<ArrayList<Integer>> clause_set) {
@@ -22,12 +27,24 @@ public class DPLL {
     public static SATResult solve (ArrayList<ArrayList<Integer>> clause_set, Set<Integer> partial_assignment, Set<Integer> all_literals) {
         // Run unit propagation
         SATResult result = callUnitPropagate(clause_set, partial_assignment);
-        clause_set = result.getClauseSet();
+        clause_set = new ArrayList<>(result.getClauseSet());
         partial_assignment = new HashSet<>(result.getAssignment());
+
+        // Base cases
+        // If clause set is empty, formula is satisfiable, return results
+        if (clause_set.isEmpty()) {
+            assignRemainingLiterals(partial_assignment, all_literals);
+            return new SATResult(clause_set, partial_assignment);
+        }
+
+        // If clause contains empty clause, formula is unsatisfiable
+        if (clause_set.contains(new ArrayList<Integer>())) {
+            return UNSAT_RESULT;
+        }
 
         // Run Pure Literal Elimination
         result = callPureLiteralElimination(clause_set, partial_assignment);
-        clause_set = result.getClauseSet();
+        clause_set = new ArrayList<>(result.getClauseSet());
         partial_assignment = new HashSet<>(result.getAssignment());
 
         // Base cases
@@ -51,9 +68,9 @@ public class DPLL {
         ArrayList<Integer> new_clause = new ArrayList<>();
         new_clause.add(literal);
         new_clause_set.add(new_clause);
-        new_partial_assignment.add(literal);
-        if (DPLL.solve(new_clause_set, new_partial_assignment, all_literals) != UNSAT_RESULT) {
-            return new SATResult(new_clause_set, new_partial_assignment);
+        SATResult new_result = DPLL.solve(new_clause_set, new_partial_assignment, all_literals);
+        if (new_result != UNSAT_RESULT) {
+            return new_result;
         }
 
         // Add -literal to clause_set and check result
@@ -62,9 +79,9 @@ public class DPLL {
         new_clause = new ArrayList<>();
         new_clause.add(-literal);
         new_clause_set.add(new_clause);
-        new_partial_assignment.add(-literal);
-        if (DPLL.solve(new_clause_set, new_partial_assignment, all_literals) != UNSAT_RESULT) {
-            return new SATResult(new_clause_set, new_partial_assignment);
+        new_result = DPLL.solve(new_clause_set, new_partial_assignment, all_literals);
+        if (new_result != UNSAT_RESULT) {
+            return new_result;
         }
 
         // If neither works, return UNSAT
@@ -94,7 +111,7 @@ public class DPLL {
     }
 
     public static void main(String[] args) {
-        ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("testsat.txt");
+        ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("LNP-6.txt");
         SATResult result = DPLL.solve(clause_set);
         System.out.println(result.getClauseSet());
         System.out.println(result.getAssignment());

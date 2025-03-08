@@ -5,8 +5,6 @@ import java.util.Set;
 
 public class UnitPropagate {
 
-    private static final SATResult UNSAT_RESULT = new SATResult (new ArrayList<>(), new HashSet<>());
-
     public static SATResult propagate (ArrayList<ArrayList<Integer>> clause_set) {
 
         Set<Integer> assignment = new HashSet<>();
@@ -21,15 +19,15 @@ public class UnitPropagate {
 
                 // Special case: If there is an empty clause, formula is unsatisfiable
                 if (clause.isEmpty()) {
-                    return UNSAT_RESULT;
+                    return DPLL.UNSAT_RESULT;
                 }
 
                 if (clause.size() == 1) {
-                    int unitLiteral = clause.getFirst();
+                    Integer unitLiteral = clause.getFirst();
 
                     // Special case: If unit literal and unit negation in same clause set, formula is unsatisfiable
                     if (assignment.contains(-unitLiteral)) {
-                        return UNSAT_RESULT;
+                        return DPLL.UNSAT_RESULT;
                     }
 
                     if (!assignment.contains(unitLiteral)) {
@@ -63,12 +61,12 @@ public class UnitPropagate {
                 }
 
                 // Add back modified clause
-                if (!sat && !modified_clause.isEmpty()) {
+                if (!sat) {
                     processed_clauses.add(modified_clause);
                 }
             }
 
-            if (!changed || clause_set.equals(processed_clauses)) {
+            if (!changed) {
                 return new SATResult(processed_clauses, assignment);
             }
 
