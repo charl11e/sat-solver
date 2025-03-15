@@ -7,6 +7,14 @@ import java.util.Set;
  * Runs the DPLL SAT Solver algorithm on a clause set.
  * Clause set must be provided in CNF format
  */
+
+// TODO Finish Refactoring
+    // TODO Add Test Cases
+    // TODO Optimise
+    // TODO Export as jar
+    // TODO Clean up repository
+    // TODO Export javadocs
+
 public class DPLL {
 
     public static final SATResult UNSAT_RESULT;
