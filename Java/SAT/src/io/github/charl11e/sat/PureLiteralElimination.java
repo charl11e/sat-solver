@@ -3,9 +3,30 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Proves functionality for running Pure Literal Elimination on a clause set.
+ * Clause set must be provided in CNF format
+ */
 public class PureLiteralElimination {
 
+    /**
+     * Run Pure Literal Elimination on a clause set
+     * @param clause_set Set of clauses stored as an array within an array
+     * @return SATResult object containing the new clause set and assignments after running Pure Literal Elimination
+     */
     public static SATResult eliminate (ArrayList<ArrayList<Integer>> clause_set) {
+        Set<Integer> pure_literals = PureLiteralElimination.getPureLiterals(clause_set);
+        Set<Integer> assignment = new HashSet<>(pure_literals);
+        ArrayList<ArrayList<Integer>> new_clause_set = PureLiteralElimination.removeClauses(clause_set, pure_literals);
+        return new SATResult(new_clause_set, assignment);
+    }
+
+    /**
+     * Gets the set of pure literals from a clause set
+     * @param clause_set Set of clauses stored as an array within an array
+     * @return Set of pure literals from clause set
+     */
+    private static Set<Integer> getPureLiterals(ArrayList<ArrayList<Integer>> clause_set) {
         Set<Integer> pure_literals = new HashSet<>();
         Set<Integer> not_pure_literals = new HashSet<>();
 
@@ -22,7 +43,6 @@ public class PureLiteralElimination {
                     pure_literals.remove(-literal);
                     not_pure_literals.add(-literal);
                     not_pure_literals.add(literal);
-                    continue;
                 }
 
                 else {
@@ -31,10 +51,16 @@ public class PureLiteralElimination {
             }
         }
 
-        // Add all pure literals to the assignment
-        Set<Integer> assignment = new HashSet<>(pure_literals);
+        return pure_literals;
+    }
 
-        // Remove all clauses containing pure literal
+    /**
+     * Removes clauses containing pure literals from clause set
+     * @param clause_set Set of clauses stored as an array within an array
+     * @param pure_literals Set of pure literals from the clause set
+     * @return New clause set after the clauses containing the pure literal have been removed
+     */
+    private static ArrayList<ArrayList<Integer>> removeClauses(ArrayList<ArrayList<Integer>> clause_set, Set<Integer> pure_literals) {
         ArrayList<ArrayList<Integer>> new_clause_set = new ArrayList<>();
         for (ArrayList<Integer> clause : clause_set) {
             boolean add_clause = true;
@@ -49,13 +75,6 @@ public class PureLiteralElimination {
                 new_clause_set.add(new ArrayList<>(clause));
             }
         }
-        return new SATResult(new_clause_set, assignment);
-    }
-
-    public static void main(String[] args) {
-        ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("testsat.txt");
-        SATResult result = UnitPropagate.propagate(clause_set);
-        System.out.println(result.getAssignment());
-        System.out.println(result.getClauseSet());
+        return new_clause_set;
     }
 }

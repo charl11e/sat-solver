@@ -3,8 +3,17 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Provides functionality for running Unit Propagation on a clause set.
+ * Clause set must be provided in CNF format
+ */
 public class UnitPropagate {
 
+    /**
+     * Run Unit Propagation on a clause set
+     * @param clause_set Set of clauses stored as an array within an array
+     * @return SATResult object containing a new clause set and assignments after Unit Propagation
+     */
     public static SATResult propagate (ArrayList<ArrayList<Integer>> clause_set) {
 
         Set<Integer> assignment = new HashSet<>();
@@ -40,31 +49,7 @@ public class UnitPropagate {
                 }
             }
 
-            // If there are unit clauses, remove all clauses containing the unit literal, and remove -literal from all other clauses
-            ArrayList<ArrayList<Integer>> processed_clauses = new ArrayList<>();
-
-            for (ArrayList<Integer> clause : new_clause_set) {
-                boolean sat = false;
-                ArrayList<Integer> modified_clause = new ArrayList<>();
-
-                // Remove clauses containing literal
-                for (int literal : clause) {
-                    if (assignment.contains(literal)) {
-                        sat = true;
-                        break;
-                    }
-
-                    // Remove -literal from clause if clause contains it
-                    if (!assignment.contains(-literal)) {
-                        modified_clause.add(literal);
-                    }
-                }
-
-                // Add back modified clause
-                if (!sat) {
-                    processed_clauses.add(modified_clause);
-                }
-            }
+            ArrayList<ArrayList<Integer>> processed_clauses = removeUnitLiterals(new_clause_set, assignment);
 
             if (!changed) {
                 return new SATResult(processed_clauses, assignment);
@@ -74,4 +59,40 @@ public class UnitPropagate {
 
         }
     }
+
+    /**
+     * Remove clauses containing unit literal from clause set, and remove -literal from all other clauses
+     * @param new_clause_set Set of clauses stored as an array within an array
+     * @param assignment Current assignment of literals
+     * @return SATResult object containing a new clause set and assignment
+     */
+    private static ArrayList<ArrayList<Integer>> removeUnitLiterals(ArrayList<ArrayList<Integer>> new_clause_set, Set<Integer> assignment) {
+        ArrayList<ArrayList<Integer>> processed_clauses = new ArrayList<>();
+
+        for (ArrayList<Integer> clause : new_clause_set) {
+            boolean sat = false;
+            ArrayList<Integer> modified_clause = new ArrayList<>();
+
+            // Remove clauses containing literal
+            for (int literal : clause) {
+                if (assignment.contains(literal)) {
+                    sat = true;
+                    break;
+                }
+
+                // Remove -literal from clause if clause contains it
+                if (!assignment.contains(-literal)) {
+                    modified_clause.add(literal);
+                }
+            }
+
+            // Add back modified clause
+            if (!sat) {
+                processed_clauses.add(modified_clause);
+            }
+        }
+        return processed_clauses;
+    }
+
+
 }
