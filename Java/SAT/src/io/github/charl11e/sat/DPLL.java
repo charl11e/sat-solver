@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Runs the DPLL SAT Solver algorithm on a clause set.
+ * Clause set must be provided in CNF format
+ */
 public class DPLL {
 
     public static final SATResult UNSAT_RESULT;
@@ -12,7 +16,12 @@ public class DPLL {
         UNSAT_RESULT = new SATResult(unsat_clause_set, new HashSet<>());
     }
 
-    // Entry point
+    /**
+     * Solves a clause set using DPLL algorithm. This is an entry point which saves a list of all the
+     * literals to be used later to ensure all literals are assigned a value
+     * @param clause_set Clause set to be solved
+     * @return SATResult object containing final assignment (if clause set is satisfiable)
+     */
     public static SATResult solve (ArrayList<ArrayList<Integer>> clause_set) {
         Set<Integer> all_literals = new HashSet<>();
         for (ArrayList<Integer> clause : clause_set) {
@@ -23,7 +32,14 @@ public class DPLL {
         return solve(clause_set, new HashSet<>(), all_literals);
     }
 
-    // Overloaded DPLL Function that stores a list of all the literals
+    /**
+     * Solves a clause set using DPLL algorithm. Not intended to be used as an entry point as a set of all the literals
+     * is saved through recursion to be used later to ensure all literals are assigned a value
+     * @param clause_set Clause set to be solved
+     * @param partial_assignment Current partial assignment of clause set
+     * @param all_literals Set of all literals of original clause set
+     * @return SATResult object containing final assignment (if clause set is satisfiable)
+     */
     public static SATResult solve (ArrayList<ArrayList<Integer>> clause_set, Set<Integer> partial_assignment, Set<Integer> all_literals) {
         // Run unit propagation
         SATResult result = callUnitPropagate(clause_set, partial_assignment);
@@ -88,7 +104,12 @@ public class DPLL {
         return UNSAT_RESULT;
     }
 
-    // Assign remaining literals to true (could equally be false)
+    /**
+     * Adds remaining literals that were not given an assignment to the final assignment
+     * All remaining literals are assigned to 1, as they do not affect the satisfiability of the clause set
+     * @param assignment Final assignment for clause set
+     * @param all_literals Set containing all literals from initial clause set
+     */
     private static void assignRemainingLiterals(Set<Integer> assignment, Set<Integer> all_literals) {
         for (Integer literal : all_literals) {
             if (!assignment.contains(-literal) && !assignment.contains(literal)) {
@@ -97,13 +118,24 @@ public class DPLL {
         }
     }
 
-    // Call Unit Propagation & Pure Literal elimination and merging the new assignments with current assignment
+    /**
+     * Runs Unit Propagation on clause set and automatically adds the new assignment to the existing assignment
+     * @param clause_set Set of clauses stored as an array within an array
+     * @param assignment Current assignment of literals
+     * @return SATResult object containing new clause set and assignment
+     */
     private static SATResult callUnitPropagate (ArrayList<ArrayList<Integer>> clause_set, Set<Integer> assignment) {
         SATResult result = UnitPropagate.propagate(clause_set);
         assignment.addAll(result.getAssignment());
         return new SATResult(result.getClauseSet(), assignment);
     }
 
+    /**
+     * Runs Pure Literal Elimination on clause set and automatically adds the new assignment to the existing assignment
+     * @param clause_set Set of clauses stored as an array within an array
+     * @param assignment Current assignment of literals
+     * @return SATResult object containing new clause set and assignment
+     */
     private static SATResult callPureLiteralElimination (ArrayList<ArrayList<Integer>> clause_set, Set<Integer> assignment) {
         SATResult result = PureLiteralElimination.eliminate(clause_set);
         assignment.addAll(result.getAssignment());
