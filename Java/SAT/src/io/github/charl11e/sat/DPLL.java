@@ -54,18 +54,6 @@ public class DPLL {
         clause_set = new ArrayList<>(result.getClauseSet());
         partial_assignment = new HashSet<>(result.getAssignment());
 
-        // Base cases
-        // If clause set is empty, formula is satisfiable, return results
-        if (clause_set.isEmpty()) {
-            assignRemainingLiterals(partial_assignment, all_literals);
-            return new SATResult(clause_set, partial_assignment);
-        }
-
-        // If clause contains empty clause, formula is unsatisfiable
-        if (clause_set.contains(new ArrayList<Integer>())) {
-            return UNSAT_RESULT;
-        }
-
         // Run Pure Literal Elimination
         result = callPureLiteralElimination(clause_set, partial_assignment);
         clause_set = new ArrayList<>(result.getClauseSet());
@@ -104,12 +92,8 @@ public class DPLL {
         new_clause.add(-literal);
         new_clause_set.add(new_clause);
         new_result = DPLL.solve(new_clause_set, new_partial_assignment, all_literals);
-        if (new_result != UNSAT_RESULT) {
-            return new_result;
-        }
+        return new_result;
 
-        // If neither works, return UNSAT
-        return UNSAT_RESULT;
     }
 
     /**
@@ -120,7 +104,7 @@ public class DPLL {
      */
     private static void assignRemainingLiterals(Set<Integer> assignment, Set<Integer> all_literals) {
         for (Integer literal : all_literals) {
-            if (!assignment.contains(-literal) && !assignment.contains(literal)) {
+            if (!assignment.contains(-literal)) {
                 assignment.add(literal);
             }
         }
@@ -152,7 +136,11 @@ public class DPLL {
 
     public static void main(String[] args) {
         ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("8queens.txt");
+        long startTime = System.nanoTime();
         SATResult result = DPLL.solve(clause_set);
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.println(duration/1000000);
         System.out.println(result.getClauseSet());
         System.out.println(result.getAssignment());
     }
