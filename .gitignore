@@ -1,5 +1,5 @@
 ### IntelliJ IDEA ###
-./Java/.idea/*
+Java/SAT/.idea
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
