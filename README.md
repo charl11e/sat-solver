@@ -23,7 +23,7 @@ The DPLL algorithm is a recursive algorithm for SAT Solving:
 2) Pick an unassigned variable and recursively assign it true and false
 3) If one branch leads to SAT, return SAT (and maybe the assignment). Otherwise, return UNSAT
 
-My DPLL algorithm implements both of these rules. In the Java edition, the latest version of the solver is located in: TO BE EXPORTED, and the docs are located in: TO BE DONE
+My DPLL algorithm implements both of these rules. In the Java edition, the latest version of the solver is located in: Java/SAT/SAT.jar, and the docs are located in: docs
 
 More details can be found about the boolean satisfiability problem here: https://en.wikipedia.org/wiki/Boolean_satisfiability_problem
 
