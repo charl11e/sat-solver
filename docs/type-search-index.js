@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"io.github.charl11e.sat","l":"DIMACS"},{"p":"io.github.charl11e.sat","l":"DPLL"},{"p":"io.github.charl11e.sat","l":"PureLiteralElimination"},{"p":"io.github.charl11e.sat","l":"SATResult"},{"p":"io.github.charl11e.sat","l":"UnitPropagate"}];updateSearchResults();

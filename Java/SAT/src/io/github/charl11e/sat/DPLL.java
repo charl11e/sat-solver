@@ -8,13 +8,6 @@ import java.util.Set;
  * Clause set must be provided in CNF format
  */
 
-// TODO Finish Refactoring
-    // TODO Add Test Cases
-    // TODO Optimise
-    // TODO Export as jar
-    // TODO Clean up repository
-    // TODO Export javadocs
-
 public class DPLL {
 
     public static final SATResult UNSAT_RESULT;
@@ -134,13 +127,31 @@ public class DPLL {
         return new SATResult(result.getClauseSet(), assignment);
     }
 
+    /**
+     * Runs a few example SAT problems to demonstrate capability
+     */
     public static void main(String[] args) {
-        ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("8queens.txt");
-        long startTime = System.nanoTime();
+        System.out.println("\n W_2,3_ n=8.txt");
+        ArrayList<ArrayList<Integer>> clause_set = DIMACS.load("W_2,3_ n=8.txt");
         SATResult result = DPLL.solve(clause_set);
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
-        System.out.println(duration/1000000);
+        System.out.println(result.getClauseSet());
+        System.out.println(result.getAssignment());
+
+        System.out.println("\n PHP-5-4.txt");
+        clause_set = DIMACS.load("PHP-5-4.txt");
+        result = DPLL.solve(clause_set);
+        System.out.println(result.getClauseSet());
+        System.out.println(result.getAssignment());
+
+        System.out.println("\n LNP-6.txt");
+        clause_set = DIMACS.load("LNP-6.txt");
+        result = DPLL.solve(clause_set);
+        System.out.println(result.getClauseSet());
+        System.out.println(result.getAssignment());
+
+        System.out.println("\n 8queens.txt");
+        clause_set = DIMACS.load("8queens.txt");
+        result = DPLL.solve(clause_set);
         System.out.println(result.getClauseSet());
         System.out.println(result.getAssignment());
     }
