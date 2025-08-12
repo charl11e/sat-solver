@@ -5,6 +5,8 @@ This was originally created as a university assignment which was to create a SAT
 
 This is my first Java project, outside of small projects just to learn the fundamentals of the language, so porting over the code allowed me to get an experience with building a full java project. Furthermore, there is an additional project (a sudoku solver), which uses the logic from this SAT Solver, found at: https://github.com/charl11e/sudoku
 
+> **As this was just a project to learn the fundamentals of Java, I have no plans to maintain/update this project**
+
 This is a quick rundown of the boolean satisfiability problem, and DPLL SAT Solvers (paraphrased from the respective wikipedia articles):
 - Propositional Logic includes variables (e.g. x, y, z), operators (OR, NOT, AND), and clauses (e.g. x OR y)
 - A literal is defined as either being a variable or the negation (-) of a variable (e.g. x or -x).
